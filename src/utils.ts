@@ -48,3 +48,29 @@ export function postUrl(title: string): string {
 export function categoryUrl(category: string): string {
   return `/danh-muc/${slugify(category)}`;
 }
+
+/** Bảng màu gradient cho chuyên mục (chữ trắng đọc tốt trên mọi màu). */
+export const CATEGORY_PALETTE: [string, string][] = [
+  ["#3b82f6", "#1e3a8a"], // xanh dương
+  ["#10b981", "#065f46"], // xanh lá
+  ["#f43f5e", "#9f1239"], // hồng đỏ
+  ["#f59e0b", "#92400e"], // cam
+  ["#8b5cf6", "#5b21b6"], // tím
+  ["#06b6d4", "#155e75"], // xanh ngọc
+];
+
+/** Chọn cặp màu gradient ổn định theo tên chuyên mục (cùng tên → cùng màu). */
+export function categoryGradient(category: string): { from: string; to: string } {
+  let h = 0;
+  for (let i = 0; i < category.length; i++) {
+    h = (h * 31 + category.charCodeAt(i)) >>> 0;
+  }
+  const [from, to] = CATEGORY_PALETTE[h % CATEGORY_PALETTE.length];
+  return { from, to };
+}
+
+/** Chuỗi CSS linear-gradient cho chuyên mục. */
+export function categoryGradientCss(category: string): string {
+  const { from, to } = categoryGradient(category);
+  return `linear-gradient(135deg, ${from} 0%, ${to} 100%)`;
+}

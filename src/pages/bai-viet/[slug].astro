@@ -12,6 +12,7 @@ import {
   ogImageFor,
   postUrl,
   categoryUrl,
+  categoryGradientCss,
   readingTime,
 } from "../../utils";
 import { DEFAULT_AUTHOR, SITE_URL, SITE_NAME } from "../../consts";
@@ -52,6 +53,7 @@ const absoluteUrl = new URL(Astro.url.pathname, SITE_URL).href;
 const ogImage = ogImageFor(data.title, data.ogImage);
 const time = readingTime(post.body ?? "");
 const initial = author.charAt(0).toUpperCase();
+const catGradient = categoryGradientCss(data.category);
 ---
 
 <BaseLayout
@@ -65,22 +67,22 @@ const initial = author.charAt(0).toUpperCase();
   tags={data.tags}
   showProgress
 >
-  <Breadcrumbs
-    items={[
-      { label: "Trang chủ", href: "/" },
-      { label: data.category, href: categoryUrl(data.category) },
-      { label: data.title },
-    ]}
-  />
-
   <article class="article" data-pagefind-body>
+    <Breadcrumbs
+      items={[
+        { label: "Trang chủ", href: "/" },
+        { label: data.category, href: categoryUrl(data.category) },
+        { label: data.title },
+      ]}
+    />
+
     <header class="article-header">
-      <a class="badge" href={categoryUrl(data.category)}>{data.category}</a>
+      <a class="badge" href={categoryUrl(data.category)} style={`background:${catGradient}`}>{data.category}</a>
       <h1>{data.title}</h1>
       <p class="article-lead">{data.description}</p>
 
       <div class="byline">
-        <span class="avatar" aria-hidden="true">{initial}</span>
+        <span class="avatar" aria-hidden="true" style={`background:${catGradient}`}>{initial}</span>
         <span class="info">
           <span class="name">{author}</span>
           <span class="meta">

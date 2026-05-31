@@ -1,5 +1,12 @@
 ---
-import { formatDate, isoDate, postUrl, categoryUrl, ogImageFor } from "../utils";
+import {
+  formatDate,
+  isoDate,
+  postUrl,
+  categoryUrl,
+  ogImageFor,
+  categoryGradientCss,
+} from "../utils";
 
 interface Props {
   title: string;
@@ -29,7 +36,7 @@ const image = ogImageFor(title, ogImage);
   </a>
   <div class="body">
     <div class="meta">
-      <a class="badge" href={categoryUrl(category)}>{category}</a>
+      <a class="badge" href={categoryUrl(category)} style={`background:${categoryGradientCss(category)}`}>{category}</a>
       <span class="dot">{readingTime}</span>
     </div>
     <h3><a href={url}>{title}</a></h3>

@@ -17,6 +17,23 @@ const POSTS_DIR = path.join(ROOT, "src", "content", "posts");
 const OUT_DIR = path.join(ROOT, "public", "og");
 const FONT_DIR = path.join(__dirname, "fonts");
 
+// Bảng màu theo chuyên mục — phải khớp CATEGORY_PALETTE trong src/utils.ts
+const CATEGORY_PALETTE = [
+  ["#3b82f6", "#1e3a8a"],
+  ["#10b981", "#065f46"],
+  ["#f43f5e", "#9f1239"],
+  ["#f59e0b", "#92400e"],
+  ["#8b5cf6", "#5b21b6"],
+  ["#06b6d4", "#155e75"],
+];
+function categoryGradient(category) {
+  let h = 0;
+  for (let i = 0; i < category.length; i++) {
+    h = (h * 31 + category.charCodeAt(i)) >>> 0;
+  }
+  return CATEGORY_PALETTE[h % CATEGORY_PALETTE.length];
+}
+
 // Giống slugify trong src/utils.ts (giữ đồng bộ để tên file ảnh khớp URL)
 function slugify(input) {
   return input
@@ -39,11 +56,12 @@ async function getSiteName() {
 }
 
 function template({ title, category, siteName }) {
+  const [from, to] = categoryGradient(category);
   return html(`
-    <div style="width:1200px;height:630px;display:flex;flex-direction:column;justify-content:space-between;padding:72px;background-color:#1e3a8a;background-image:linear-gradient(135deg,#2563eb 0%,#1e3a8a 100%);font-family:'Be Vietnam Pro';color:#ffffff;">
-      <div style="display:flex;font-size:30px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#bfdbfe;">${category}</div>
+    <div style="width:1200px;height:630px;display:flex;flex-direction:column;justify-content:space-between;padding:72px;background-color:${to};background-image:linear-gradient(135deg,${from} 0%,${to} 100%);font-family:'Be Vietnam Pro';color:#ffffff;">
+      <div style="display:flex;font-size:30px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.85);">${category}</div>
       <div style="display:flex;font-size:66px;font-weight:700;line-height:1.15;">${title}</div>
-      <div style="display:flex;align-items:center;font-size:32px;font-weight:400;color:#e0e7ff;">${siteName}</div>
+      <div style="display:flex;align-items:center;font-size:32px;font-weight:400;color:rgba(255,255,255,0.9);">${siteName}</div>
     </div>
   `);
 }
