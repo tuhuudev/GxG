@@ -30,9 +30,9 @@ const year = new Date().getFullYear();
   <body>
     <header class="site-header">
       <div class="container">
-        <a href="/" class="brand">
-          <img src="/logo.svg" alt={SITE_NAME} width="36" height="36" />
-          <span>{SITE_NAME}</span>
+        <a href="/" class="brand" aria-label={SITE_NAME}>
+          <img src="/logo.svg" alt={SITE_NAME} width="40" height="40" />
+          <span class="visually-hidden">{SITE_NAME}</span>
         </a>
         <nav>
           <a href="/">Trang chủ</a>
