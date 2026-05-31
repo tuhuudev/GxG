@@ -248,7 +248,7 @@ main {
 
 .featured {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
+  grid-template-columns: 1fr 1.05fr;
   gap: 0;
   margin: 28px 0 44px;
   border: 1px solid var(--border);
@@ -270,12 +270,25 @@ main {
   height: 100%;
   min-height: 280px;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.featured:hover .media img {
+  transform: scale(1.03);
 }
 .featured .body {
   padding: 36px 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+/* Desktop: chữ bên trái (có padding), ảnh bên phải */
+@media (min-width: 761px) {
+  .featured .body {
+    order: 1;
+  }
+  .featured .media {
+    order: 2;
+  }
 }
 .featured h2 {
   font-size: clamp(1.5rem, 2.6vw, 2.1rem);
