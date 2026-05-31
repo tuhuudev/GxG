@@ -1,17 +1,25 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import TableOfContents from "../../components/TableOfContents.astro";
 import ShareButtons from "../../components/ShareButtons.astro";
 import RelatedPosts from "../../components/RelatedPosts.astro";
-import { formatDate, isoDate, slugify, ogImageFor } from "../../utils";
-import { DEFAULT_AUTHOR, SITE_URL } from "../../consts";
+import {
+  formatDate,
+  isoDate,
+  slugify,
+  ogImageFor,
+  postUrl,
+  categoryUrl,
+  readingTime,
+} from "../../utils";
+import { DEFAULT_AUTHOR, SITE_URL, SITE_NAME } from "../../consts";
 
-// Sinh trang tĩnh cho từng bài viết. Slug lấy từ tiêu đề (bỏ dấu).
 export async function getStaticPaths() {
   const posts = await getCollection("posts", ({ data }) => !data.draft);
 
   return posts.map((post) => {
-    // Tính bài liên quan: ưu tiên cùng chuyên mục, sau đó là trùng tag.
     const related = posts
       .filter((p) => p.id !== post.id)
       .map((p) => {
@@ -38,11 +46,12 @@ export async function getStaticPaths() {
 
 const { post, related } = Astro.props;
 const { data } = post;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const author = data.author ?? DEFAULT_AUTHOR;
 const absoluteUrl = new URL(Astro.url.pathname, SITE_URL).href;
-// Ảnh cho thẻ og:image: ảnh thật nếu có, ngược lại dùng ảnh tự sinh
 const ogImage = ogImageFor(data.title, data.ogImage);
+const time = readingTime(post.body ?? "");
+const initial = author.charAt(0).toUpperCase();
 ---
 
 <BaseLayout
@@ -54,40 +63,70 @@ const ogImage = ogImageFor(data.title, data.ogImage);
   modifiedDate={data.updatedDate}
   author={author}
   tags={data.tags}
+  showProgress
 >
-  <article class="article">
+  <Breadcrumbs
+    items={[
+      { label: "Trang chủ", href: "/" },
+      { label: data.category, href: categoryUrl(data.category) },
+      { label: data.title },
+    ]}
+  />
+
+  <article class="article" data-pagefind-body>
     <header class="article-header">
-      <div class="meta">
-        <a class="badge" href={`/danh-muc/${slugify(data.category)}`}>{data.category}</a>
-        <time datetime={isoDate(data.pubDate)}>{formatDate(data.pubDate)}</time>
-        <span>·</span>
-        <span>{author}</span>
-      </div>
+      <a class="badge" href={categoryUrl(data.category)}>{data.category}</a>
       <h1>{data.title}</h1>
-      <p style="color:var(--color-muted);font-size:1.1rem">{data.description}</p>
+      <p class="article-lead">{data.description}</p>
+
+      <div class="byline">
+        <span class="avatar" aria-hidden="true">{initial}</span>
+        <span class="info">
+          <span class="name">{author}</span>
+          <span class="meta">
+            <time datetime={isoDate(data.pubDate)}>{formatDate(data.pubDate)}</time>
+            <span class="dot">{time}</span>
+          </span>
+        </span>
+      </div>
+
+      {
+        data.ogImage && (
+          <img
+            class="article-cover"
+            src={data.ogImage}
+            alt={data.title}
+            width="1200"
+            height="630"
+            fetchpriority="high"
+            decoding="async"
+          />
+        )
+      }
     </header>
 
-    {
-      data.ogImage && (
-        <img
-          class="article-cover"
-          src={data.ogImage}
-          alt={data.title}
-          width="1200"
-          height="630"
-          fetchpriority="high"
-          decoding="async"
-        />
-      )
-    }
+    <div class="article-layout">
+      <TableOfContents headings={headings} />
 
-    <div class="prose">
-      <Content />
+      <div class="article-main">
+        <div class="prose">
+          <Content />
+        </div>
+
+        {
+          data.tags.length > 0 && (
+            <ul class="tags">
+              {data.tags.map((tag) => (
+                <li><span class="tag">#{tag}</span></li>
+              ))}
+            </ul>
+          )
+        }
+
+        <ShareButtons url={absoluteUrl} title={data.title} />
+        <a class="back-link" href="/">← Về trang chủ</a>
+      </div>
     </div>
-
-    <ShareButtons url={absoluteUrl} title={data.title} />
-
-    <a class="back-link" href="/">← Về trang chủ</a>
 
     <RelatedPosts posts={related} />
   </article>

@@ -1,0 +1,46 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE_NAME } from "../consts";
+---
+
+<BaseLayout
+  title="Tìm kiếm"
+  description={`Tìm kiếm bài viết trên ${SITE_NAME}`}
+  type="website"
+>
+  <section class="page-intro">
+    <h1>Tìm kiếm</h1>
+    <p>Nhập từ khóa để tìm bài viết.</p>
+  </section>
+
+  <div class="search-wrap">
+    <div id="search"></div>
+    <noscript>Vui lòng bật JavaScript để sử dụng tìm kiếm.</noscript>
+  </div>
+
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  <script src="/pagefind/pagefind-ui.js" is:inline></script>
+  <script is:inline>
+    window.addEventListener("DOMContentLoaded", () => {
+      if (typeof window.PagefindUI === "undefined") {
+        document.getElementById("search").innerHTML =
+          '<p style="color:var(--muted)">Tìm kiếm chỉ hoạt động trên bản build chính thức (chạy <code>npm run build</code> rồi <code>npm run preview</code>), không hoạt động ở chế độ dev.</p>';
+        return;
+      }
+      new window.PagefindUI({
+        element: "#search",
+        showSubResults: true,
+        showImages: false,
+        translations: {
+          placeholder: "Tìm bài viết...",
+          zero_results: "Không tìm thấy kết quả cho [SEARCH_TERM]",
+          many_results: "[COUNT] kết quả cho [SEARCH_TERM]",
+          one_result: "[COUNT] kết quả cho [SEARCH_TERM]",
+          clear_search: "Xóa",
+          load_more: "Xem thêm kết quả",
+          search_label: "Tìm kiếm",
+        },
+      });
+    });
+  </script>
+</BaseLayout>

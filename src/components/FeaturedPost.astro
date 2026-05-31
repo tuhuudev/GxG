@@ -1,5 +1,5 @@
 ---
-import { formatDate, isoDate, postUrl, categoryUrl, ogImageFor } from "../utils";
+import { formatDate, isoDate, ogImageFor, postUrl, categoryUrl } from "../utils";
 
 interface Props {
   title: string;
@@ -15,27 +15,18 @@ const url = postUrl(title);
 const image = ogImageFor(title, ogImage);
 ---
 
-<li class="post-card">
-  <a href={url} class="thumb-link" aria-label={title}>
-    <img
-      class="thumb"
-      src={image}
-      alt={title}
-      width="1200"
-      height="630"
-      loading="lazy"
-      decoding="async"
-    />
+<article class="featured">
+  <a href={url} class="media" aria-label={title}>
+    <img src={image} alt={title} width="1200" height="630" fetchpriority="high" decoding="async" />
   </a>
   <div class="body">
     <div class="meta">
       <a class="badge" href={categoryUrl(category)}>{category}</a>
+      <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
       <span class="dot">{readingTime}</span>
     </div>
-    <h3><a href={url}>{title}</a></h3>
+    <h2><a href={url}>{title}</a></h2>
     <p>{description}</p>
-    <div class="meta" style="margin-top:14px">
-      <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
-    </div>
+    <a href={url} style="font-weight:700">Đọc tiếp →</a>
   </div>
-</li>
+</article>

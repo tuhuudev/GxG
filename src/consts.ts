@@ -18,6 +18,9 @@ export const SITE_LANG = "vi";
 /** Tác giả mặc định (dùng cho JSON-LD) */
 export const DEFAULT_AUTHOR = "GxG";
 
+/** Link Fanpage Facebook (dùng cho nút "Theo dõi" và footer). Đổi thành trang của bạn. */
+export const FACEBOOK_URL = "https://www.facebook.com/";
+
 /** Ảnh OG mặc định khi bài viết không khai báo ogImage (đặt trong /public)
  *  LƯU Ý: Facebook KHÔNG render ảnh SVG cho thẻ preview.
  *  Trước khi lên production, hãy thay bằng ảnh .jpg/.png kích thước 1200×630. */

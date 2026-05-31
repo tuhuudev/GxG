@@ -31,3 +31,20 @@ export function isoDate(date: Date): string {
 export function ogImageFor(title: string, explicit?: string): string {
   return explicit ?? `/og/${slugify(title)}.png`;
 }
+
+/** Ước lượng thời gian đọc (tiếng Việt ~200 từ/phút) từ nội dung markdown. */
+export function readingTime(body: string): string {
+  const words = body.trim().split(/\s+/).filter(Boolean).length;
+  const minutes = Math.max(1, Math.round(words / 200));
+  return `${minutes} phút đọc`;
+}
+
+/** Đường dẫn bài viết từ tiêu đề. */
+export function postUrl(title: string): string {
+  return `/bai-viet/${slugify(title)}`;
+}
+
+/** Đường dẫn trang chuyên mục từ tên chuyên mục. */
+export function categoryUrl(category: string): string {
+  return `/danh-muc/${slugify(category)}`;
+}

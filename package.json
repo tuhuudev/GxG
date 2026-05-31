@@ -7,17 +7,21 @@
     "dev": "astro dev",
     "start": "astro dev",
     "og": "node scripts/generate-og.mjs",
-    "build": "node scripts/generate-og.mjs && astro build",
+    "build": "node scripts/generate-og.mjs && astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.3.0",
+    "@fontsource/be-vietnam-pro": "^5.2.8",
     "@resvg/resvg-js": "^2.6.2",
     "astro": "^5.7.0",
     "gray-matter": "^4.0.3",
     "satori": "^0.26.0",
     "satori-html": "^0.3.2"
+  },
+  "devDependencies": {
+    "pagefind": "^1.5.2"
   }
 }
