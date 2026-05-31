@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "start": "astro dev",
     "og": "node scripts/generate-og.mjs",
-    "build": "node scripts/generate-og.mjs && astro build && pagefind --site dist",
+    "sheet": "node scripts/fetch-sheet.mjs",
+    "build": "node scripts/fetch-sheet.mjs && node scripts/generate-og.mjs && astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -17,6 +18,7 @@
     "@fontsource/be-vietnam-pro": "^5.2.8",
     "@resvg/resvg-js": "^2.6.2",
     "astro": "^5.7.0",
+    "csv-parse": "^6.2.1",
     "gray-matter": "^4.0.3",
     "satori": "^0.26.0",
     "satori-html": "^0.3.2"

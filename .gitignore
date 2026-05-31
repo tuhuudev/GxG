@@ -4,6 +4,8 @@ dist/
 public/og/
 # ảnh chụp màn hình để review (công cụ dev)
 scripts/shots/
+# bài viết sinh tự động từ Google Sheet (build tạo lại)
+src/content/posts/sheet-*.md
 # generated types
 .astro/
 # dependencies
