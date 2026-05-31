@@ -1,0 +1,96 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PostCard from "../components/PostCard.astro";
+import { SITE_NAME, SITE_DESCRIPTION } from "../consts";
+import { slugify, ogImageFor } from "../utils";
+
+// Phân trang: trang đầu ở "/", các trang sau ở "/2", "/3"...
+export async function getStaticPaths({ paginate }) {
+  const PAGE_SIZE = 6; // số bài mỗi trang
+  const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
+  return paginate(posts, { pageSize: PAGE_SIZE });
+}
+
+const { page } = Astro.props;
+const isFirstPage = page.currentPage === 1;
+// Trang 2 trở đi nên có canonical riêng + tránh trùng lặp tiêu đề
+const pageTitle = isFirstPage ? SITE_NAME : `${SITE_NAME} — Trang ${page.currentPage}`;
+---
+
+<BaseLayout title={pageTitle} description={SITE_DESCRIPTION} type="website">
+  {
+    isFirstPage && (
+      <section style="margin-top:40px">
+        <h1>{SITE_NAME}</h1>
+        <p style="color:var(--color-muted);font-size:1.1rem">{SITE_DESCRIPTION}</p>
+      </section>
+    )
+  }
+
+  <ul class="post-list">
+    {
+      page.data.map((post) => (
+        <PostCard
+          url={`/bai-viet/${slugify(post.data.title)}`}
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          category={post.data.category}
+          image={ogImageFor(post.data.title, post.data.ogImage)}
+        />
+      ))
+    }
+  </ul>
+
+  {
+    page.lastPage > 1 && (
+      <nav class="pagination" aria-label="Phân trang">
+        {page.url.prev ? (
+          <a href={page.url.prev}>← Trước</a>
+        ) : (
+          <span class="disabled">← Trước</span>
+        )}
+        <span class="page-info">
+          Trang {page.currentPage} / {page.lastPage}
+        </span>
+        {page.url.next ? (
+          <a href={page.url.next}>Sau →</a>
+        ) : (
+          <span class="disabled">Sau →</span>
+        )}
+      </nav>
+    )
+  }
+
+  {
+    page.data.length === 0 && (
+      <p>Chưa có bài viết nào. Thêm file .md vào <code>src/content/posts/</code>.</p>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 40px 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+  }
+  .pagination a {
+    font-weight: 600;
+  }
+  .pagination .disabled {
+    color: var(--color-muted);
+    opacity: 0.5;
+  }
+  .page-info {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+  }
+</style>

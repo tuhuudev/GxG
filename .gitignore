@@ -1,0 +1,15 @@
+# build output
+dist/
+# ảnh OG tự sinh (build sẽ tạo lại)
+public/og/
+# generated types
+.astro/
+# dependencies
+node_modules/
+# logs
+npm-debug.log*
+# environment
+.env
+.env.production
+# macOS
+.DS_Store

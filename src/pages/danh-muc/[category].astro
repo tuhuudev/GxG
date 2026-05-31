@@ -1,0 +1,55 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { slugify, ogImageFor } from "../../utils";
+import { SITE_NAME } from "../../consts";
+
+// Sinh 1 trang cho mỗi chuyên mục (category) có trong bài viết.
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => !data.draft);
+
+  // Gom các category duy nhất
+  const categories = new Map<string, string>(); // slug -> tên gốc
+  for (const post of posts) {
+    categories.set(slugify(post.data.category), post.data.category);
+  }
+
+  return Array.from(categories.entries()).map(([slug, name]) => {
+    const filtered = posts
+      .filter((p) => slugify(p.data.category) === slug)
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+    return {
+      params: { category: slug },
+      props: { name, posts: filtered },
+    };
+  });
+}
+
+const { name, posts } = Astro.props;
+const title = `Chuyên mục: ${name}`;
+const description = `Tổng hợp các bài viết thuộc chuyên mục ${name} trên ${SITE_NAME}.`;
+---
+
+<BaseLayout title={title} description={description} type="website">
+  <section style="margin-top:40px">
+    <a href="/" style="font-size:.9rem">← Trang chủ</a>
+    <h1>Chuyên mục: {name}</h1>
+    <p style="color:var(--color-muted)">{posts.length} bài viết</p>
+  </section>
+
+  <ul class="post-list">
+    {
+      posts.map((post) => (
+        <PostCard
+          url={`/bai-viet/${slugify(post.data.title)}`}
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          category={post.data.category}
+          image={ogImageFor(post.data.title, post.data.ogImage)}
+        />
+      ))
+    }
+  </ul>
+</BaseLayout>

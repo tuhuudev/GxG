@@ -1,0 +1,79 @@
+---
+import { slugify, formatDate, isoDate, ogImageFor } from "../utils";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  posts: CollectionEntry<"posts">[];
+}
+const { posts } = Astro.props;
+---
+
+{
+  posts.length > 0 && (
+    <section class="related">
+      <h2>Bài viết liên quan</h2>
+      <ul class="related-list">
+        {posts.map((post) => (
+          <li>
+            <a href={`/bai-viet/${slugify(post.data.title)}`}>
+              <img
+                src={ogImageFor(post.data.title, post.data.ogImage)}
+                alt={post.data.title}
+                width="1200"
+                height="630"
+                loading="lazy"
+                decoding="async"
+              />
+              <div>
+                <time datetime={isoDate(post.data.pubDate)}>
+                  {formatDate(post.data.pubDate)}
+                </time>
+                <h3>{post.data.title}</h3>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .related {
+    margin-top: 56px;
+  }
+  .related h2 {
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+  }
+  .related-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+  }
+  .related-list a {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+  }
+  .related-list img {
+    width: 100%;
+    aspect-ratio: 1200 / 630;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  .related-list time {
+    color: var(--color-muted);
+    font-size: 0.8rem;
+  }
+  .related-list h3 {
+    font-size: 1rem;
+    margin: 4px 0 0;
+  }
+  .related-list a:hover h3 {
+    color: var(--color-primary);
+  }
+</style>

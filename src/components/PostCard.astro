@@ -1,0 +1,37 @@
+---
+import { formatDate, isoDate, slugify } from "../utils";
+import { DEFAULT_OG_IMAGE } from "../consts";
+
+interface Props {
+  url: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  category: string;
+  image?: string;
+}
+
+const { url, title, description, pubDate, category, image } = Astro.props;
+---
+
+<li class="post-card">
+  <a href={url} class="thumb-link" aria-label={title}>
+    <img
+      class="thumb"
+      src={image ?? DEFAULT_OG_IMAGE}
+      alt={title}
+      width="1200"
+      height="630"
+      loading="lazy"
+      decoding="async"
+    />
+  </a>
+  <div class="body">
+    <div class="meta">
+      <a class="badge" href={`/danh-muc/${slugify(category)}`}>{category}</a>
+      <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
+    </div>
+    <h2><a href={url}>{title}</a></h2>
+    <p>{description}</p>
+  </div>
+</li>

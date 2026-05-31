@@ -1,0 +1,238 @@
+/* =============================================================
+   GLOBAL CSS — tối giản, nhanh, không framework nặng.
+   Dùng font hệ thống (system font stack) -> 0 byte font tải về,
+   hiển thị tức thì, hỗ trợ tiếng Việt đầy đủ.
+   ============================================================= */
+
+:root {
+  --max-width: 720px;
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+  --color-muted: #6b7280;
+  --color-primary: #2563eb;
+  --color-border: #e5e7eb;
+  --color-card: #f9fafb;
+  --radius: 12px;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0f1115;
+    --color-text: #e8eaed;
+    --color-muted: #9aa0a6;
+    --color-primary: #60a5fa;
+    --color-border: #2a2e37;
+    --color-card: #171a21;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: clamp(1.7rem, 5vw, 2.4rem);
+}
+
+/* Header */
+.site-header {
+  border-bottom: 1px solid var(--color-border);
+  padding: 16px 0;
+}
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--color-text);
+}
+.brand:hover {
+  text-decoration: none;
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  margin-top: 64px;
+  padding: 32px 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Post card (trang chủ) */
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 32px 0;
+  display: grid;
+  gap: 28px;
+}
+.post-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--color-card);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.post-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+.post-card h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+.post-card h2 a:hover {
+  color: var(--color-primary);
+}
+.thumb-link {
+  display: block;
+}
+.post-card .thumb {
+  aspect-ratio: 1200 / 630;
+  width: 100%;
+  object-fit: cover;
+  background: var(--color-border);
+}
+.post-card .body {
+  padding: 18px 20px 22px;
+}
+.post-card h2 {
+  margin: 6px 0 8px;
+  font-size: 1.3rem;
+}
+.post-card p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.98rem;
+}
+
+.meta {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.badge {
+  display: inline-block;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+a.badge:hover {
+  text-decoration: none;
+  opacity: 0.9;
+}
+
+/* Article (trang chi tiết) */
+.article {
+  margin: 40px 0;
+}
+.article-header h1 {
+  margin: 12px 0;
+}
+.article-cover {
+  width: 100%;
+  aspect-ratio: 1200 / 630;
+  object-fit: cover;
+  border-radius: var(--radius);
+  margin: 24px 0;
+}
+.prose {
+  font-size: 1.05rem;
+}
+.prose h2 {
+  margin-top: 2em;
+  font-size: 1.5rem;
+}
+.prose h3 {
+  margin-top: 1.6em;
+  font-size: 1.2rem;
+}
+.prose img {
+  border-radius: var(--radius);
+  margin: 1.5em auto;
+}
+.prose pre {
+  padding: 16px;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-size: 0.9rem;
+}
+.prose blockquote {
+  border-left: 4px solid var(--color-primary);
+  margin: 1.5em 0;
+  padding: 0.5em 1em;
+  color: var(--color-muted);
+}
+.prose code {
+  background: var(--color-card);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+
+.back-link {
+  display: inline-block;
+  margin: 24px 0 0;
+  font-weight: 600;
+}

@@ -1,0 +1,48 @@
+---
+import SEO from "../components/SEO.astro";
+import { SITE_NAME, SITE_LANG } from "../consts";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  publishDate?: Date;
+  modifiedDate?: Date;
+  author?: string;
+  tags?: string[];
+}
+
+const props = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang={SITE_LANG}>
+  <head>
+    <SEO {...props} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href="/rss.xml" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <a href="/" class="brand">{SITE_NAME}</a>
+        <nav>
+          <a href="/">Trang chủ</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>© {year} {SITE_NAME}. Đã đăng ký bản quyền.</p>
+      </div>
+    </footer>
+  </body>
+</html>

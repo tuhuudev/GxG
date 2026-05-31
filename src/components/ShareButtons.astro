@@ -1,0 +1,60 @@
+---
+// Nút chia sẻ — chỉ dùng link, KHÔNG kèm JavaScript -> giữ trang nhẹ & nhanh.
+interface Props {
+  url: string; // URL tuyệt đối của bài viết
+  title: string;
+}
+const { url, title } = Astro.props;
+
+const fb = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+const x = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+const tg = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+---
+
+<div class="share">
+  <span class="share-label">Chia sẻ:</span>
+  <a class="share-btn fb" href={fb} target="_blank" rel="noopener nofollow"
+    aria-label="Chia sẻ lên Facebook">Facebook</a>
+  <a class="share-btn x" href={x} target="_blank" rel="noopener nofollow"
+    aria-label="Chia sẻ lên X">X (Twitter)</a>
+  <a class="share-btn tg" href={tg} target="_blank" rel="noopener nofollow"
+    aria-label="Chia sẻ lên Telegram">Telegram</a>
+</div>
+
+<style>
+  .share {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 32px 0;
+    padding: 16px 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .share-label {
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+  .share-btn {
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+  }
+  .share-btn:hover {
+    opacity: 0.9;
+    text-decoration: none;
+  }
+  .fb {
+    background: #1877f2;
+  }
+  .x {
+    background: #000;
+  }
+  .tg {
+    background: #229ed9;
+  }
+</style>
