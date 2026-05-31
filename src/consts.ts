@@ -3,7 +3,7 @@
 // =============================================================
 
 /** Tên miền chính thức (KHÔNG có dấu / ở cuối). Dùng cho canonical, OG, sitemap. */
-export const SITE_URL = "https://example.com";
+export const SITE_URL = "https://gxg-3un.pages.dev";
 
 /** Tên thương hiệu / tên trang — hiển thị ở header và og:site_name */
 export const SITE_NAME = "GxG Blog";
