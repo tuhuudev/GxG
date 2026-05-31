@@ -2,6 +2,8 @@
 dist/
 # ảnh OG tự sinh (build sẽ tạo lại)
 public/og/
+# ảnh chụp màn hình để review (công cụ dev)
+scripts/shots/
 # generated types
 .astro/
 # dependencies

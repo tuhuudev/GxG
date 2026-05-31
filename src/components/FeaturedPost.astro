@@ -2,7 +2,6 @@
 import {
   formatDate,
   isoDate,
-  ogImageFor,
   postUrl,
   categoryUrl,
   categoryGradientCss,
@@ -19,21 +18,41 @@ interface Props {
 const { title, description, pubDate, category, ogImage, readingTime } =
   Astro.props;
 const url = postUrl(title);
-const image = ogImageFor(title, ogImage);
+// Chỉ coi là "có ảnh" khi người dùng đặt ảnh thật; ảnh OG tự sinh (chứa
+// chính tiêu đề) sẽ không hiển thị để tránh lặp + bị cắt.
+const hasPhoto = Boolean(ogImage);
+const gradient = categoryGradientCss(category);
 ---
 
-<article class="featured">
-  <a href={url} class="media" aria-label={title}>
-    <img src={image} alt={title} width="1200" height="630" fetchpriority="high" decoding="async" />
-  </a>
-  <div class="body">
-    <div class="meta">
-      <a class="badge" href={categoryUrl(category)} style={`background:${categoryGradientCss(category)}`}>{category}</a>
-      <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
-      <span class="dot">{readingTime}</span>
-    </div>
-    <h2><a href={url}>{title}</a></h2>
-    <p>{description}</p>
-    <a href={url} style="font-weight:700">Đọc tiếp →</a>
-  </div>
-</article>
+{
+  hasPhoto ? (
+    <article class="featured featured--photo">
+      <a href={url} class="media" aria-label={title}>
+        <img src={ogImage} alt={title} width="1200" height="630" fetchpriority="high" decoding="async" />
+      </a>
+      <div class="body">
+        <div class="meta">
+          <a class="badge" href={categoryUrl(category)} style={`background:${gradient}`}>{category}</a>
+          <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
+          <span class="dot">{readingTime}</span>
+        </div>
+        <h2><a href={url}>{title}</a></h2>
+        <p>{description}</p>
+        <a href={url} style="font-weight:700">Đọc tiếp →</a>
+      </div>
+    </article>
+  ) : (
+    <article class="featured featured--panel" style={`background:${gradient}`}>
+      <div class="body">
+        <div class="meta">
+          <a class="badge badge--ghost" href={categoryUrl(category)}>{category}</a>
+          <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
+          <span class="dot">{readingTime}</span>
+        </div>
+        <h2><a href={url}>{title}</a></h2>
+        <p>{description}</p>
+        <a href={url} class="btn">Đọc bài viết →</a>
+      </div>
+    </article>
+  )
+}

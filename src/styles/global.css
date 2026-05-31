@@ -247,62 +247,82 @@ main {
 }
 
 .featured {
-  display: grid;
-  grid-template-columns: 1fr 1.05fr;
-  gap: 0;
   margin: 28px 0 44px;
-  border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  background: var(--surface);
   box-shadow: var(--shadow);
   transition: box-shadow 0.2s, transform 0.2s;
 }
 .featured:hover {
   box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
-}
-.featured .media {
-  overflow: hidden;
-}
-.featured .media img {
-  width: 100%;
-  height: 100%;
-  min-height: 280px;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-.featured:hover .media img {
-  transform: scale(1.03);
-}
-.featured .body {
-  padding: 36px 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-/* Desktop: chữ bên trái (có padding), ảnh bên phải */
-@media (min-width: 761px) {
-  .featured .body {
-    order: 1;
-  }
-  .featured .media {
-    order: 2;
-  }
+  transform: translateY(-3px);
 }
 .featured h2 {
-  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
-  margin: 14px 0 12px;
+  margin: 14px 0;
 }
 .featured h2 a {
   color: inherit;
 }
-.featured h2 a:hover {
+
+/* Bài nổi bật dạng panel màu (khi chưa có ảnh thật) */
+.featured--panel {
+  color: #fff;
+}
+.featured--panel .body {
+  padding: 52px 56px;
+}
+.featured--panel h2 {
+  font-size: clamp(1.8rem, 3.4vw, 2.7rem);
+  max-width: 720px;
+}
+.featured--panel h2 a:hover {
+  opacity: 0.92;
+  text-decoration: none;
+}
+.featured--panel p {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1.12rem;
+  margin: 0 0 24px;
+  max-width: 620px;
+}
+.featured--panel .meta,
+.featured--panel time {
+  color: rgba(255, 255, 255, 0.88);
+}
+.badge--ghost {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Bài nổi bật dạng ảnh (khi có ảnh thật) */
+.featured--photo {
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.featured--photo .media {
+  display: block;
+  overflow: hidden;
+}
+.featured--photo .media img {
+  width: 100%;
+  aspect-ratio: 1200 / 630;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.featured--photo:hover .media img {
+  transform: scale(1.03);
+}
+.featured--photo .body {
+  padding: 26px 32px 32px;
+}
+.featured--photo h2 {
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+}
+.featured--photo h2 a:hover {
   color: var(--primary);
 }
-.featured p {
+.featured--photo p {
   color: var(--muted);
-  margin: 0 0 18px;
+  margin: 0 0 16px;
 }
 
 /* ---------- Lưới thẻ ---------- */
@@ -810,14 +830,11 @@ a.badge:hover {
 
 /* ---------- Responsive ---------- */
 @media (max-width: 760px) {
-  .featured {
-    grid-template-columns: 1fr;
+  .featured--panel .body {
+    padding: 32px 26px;
   }
-  .featured .media img {
-    min-height: 200px;
-  }
-  .featured .body {
-    padding: 24px;
+  .featured--photo .body {
+    padding: 22px 22px 26px;
   }
   .footer-grid {
     grid-template-columns: 1fr 1fr;
