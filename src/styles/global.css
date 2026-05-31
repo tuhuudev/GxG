@@ -92,9 +92,15 @@ h1 {
   justify-content: space-between;
 }
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-weight: 800;
   font-size: 1.25rem;
   color: var(--color-text);
+}
+.brand img {
+  border-radius: 8px;
 }
 .brand:hover {
   text-decoration: none;

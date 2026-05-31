@@ -22,13 +22,18 @@ const year = new Date().getFullYear();
 <html lang={SITE_LANG}>
   <head>
     <SEO {...props} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href="/rss.xml" />
   </head>
   <body>
     <header class="site-header">
       <div class="container">
-        <a href="/" class="brand">{SITE_NAME}</a>
+        <a href="/" class="brand">
+          <img src="/logo.svg" alt={SITE_NAME} width="36" height="36" />
+          <span>{SITE_NAME}</span>
+        </a>
         <nav>
           <a href="/">Trang chủ</a>
         </nav>
