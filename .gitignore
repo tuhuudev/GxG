@@ -6,6 +6,8 @@ public/og/
 scripts/shots/
 # bài viết sinh tự động từ Google Sheet (build tạo lại)
 src/content/posts/sheet-*.md
+# file tạm khi dò trend (npm run ai:trends -- --json)
+trends.json
 # generated types
 .astro/
 # dependencies

@@ -21,9 +21,27 @@ import { parse } from "csv-parse/sync";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const POSTS_DIR = path.join(ROOT, "src", "content", "posts");
-const CSV_URL = process.env.SHEET_CSV_URL;
 
 const PUBLISHED = new Set(["", "published", "publish", "public", "đăng", "1", "true", "yes"]);
+
+// Đọc .env ở gốc project (nếu có) để chạy được dưới máy local. Trên Cloudflare,
+// SHEET_CSV_URL đã có sẵn trong env nên hàm này không ghi đè.
+async function loadDotEnv() {
+  try {
+    const raw = await fs.readFile(path.join(ROOT, ".env"), "utf-8");
+    for (const line of raw.split(/\r?\n/)) {
+      const t = line.trim();
+      if (!t || t.startsWith("#")) continue;
+      const eq = t.indexOf("=");
+      if (eq === -1) continue;
+      const key = t.slice(0, eq).trim();
+      const val = t.slice(eq + 1).trim().replace(/^["']|["']$/g, "");
+      if (key && process.env[key] === undefined) process.env[key] = val;
+    }
+  } catch {
+    // .env là tuỳ chọn.
+  }
+}
 
 function slugify(input) {
   return input
@@ -50,25 +68,34 @@ async function clearOld() {
   );
 }
 
-async function readCsv() {
-  if (CSV_URL.startsWith("http")) {
-    const res = await fetch(CSV_URL, { redirect: "follow" });
+async function readCsv(csvUrl) {
+  if (csvUrl.startsWith("http")) {
+    const res = await fetch(csvUrl, { redirect: "follow" });
     if (!res.ok) throw new Error(`Tải Sheet thất bại: HTTP ${res.status}`);
     return await res.text();
   }
   // hỗ trợ đường dẫn file cục bộ để test
-  return await fs.readFile(path.resolve(ROOT, CSV_URL), "utf-8");
+  return await fs.readFile(path.resolve(ROOT, csvUrl), "utf-8");
 }
 
 async function main() {
+  await loadDotEnv();
+  const CSV_URL = process.env.SHEET_CSV_URL;
+
+  // Luôn dọn file sheet-*.md cũ trước (tránh bài cũ còn sót khi Sheet thay đổi/để trống).
+  await clearOld();
+
   if (!CSV_URL) {
     console.log("[sheet] Bỏ qua (chưa đặt SHEET_CSV_URL).");
     return;
   }
-  const csv = await readCsv();
-  const rows = parse(csv, { columns: true, skip_empty_lines: true, trim: true });
-
-  await clearOld();
+  const csv = await readCsv(CSV_URL);
+  // columns: cắt dấu cách thừa ở tên cột (vd "title " -> "title") để khớp tên cột chắc chắn.
+  const rows = parse(csv, {
+    columns: (header) => header.map((h) => String(h).trim()),
+    skip_empty_lines: true,
+    trim: true,
+  });
 
   const seen = new Set();
   let count = 0;

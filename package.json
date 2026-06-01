@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "ai:post": "node scripts/generate-ai-post.mjs",
+    "ai:trends": "node scripts/fetch-trends.mjs",
+    "ai:auto": "node scripts/auto-trend-post.mjs",
+    "media:up": "node scripts/upload-media.mjs",
     "og": "node scripts/generate-og.mjs",
     "sheet": "node scripts/fetch-sheet.mjs",
     "build": "node scripts/fetch-sheet.mjs && node scripts/generate-og.mjs && astro build && pagefind --site dist",
@@ -18,10 +22,12 @@
     "@fontsource/be-vietnam-pro": "^5.2.8",
     "@resvg/resvg-js": "^2.6.2",
     "astro": "^5.7.0",
+    "aws4fetch": "^1.0.20",
     "csv-parse": "^6.2.1",
     "gray-matter": "^4.0.3",
     "satori": "^0.26.0",
-    "satori-html": "^0.3.2"
+    "satori-html": "^0.3.2",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "pagefind": "^1.5.2",
