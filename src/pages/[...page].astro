@@ -18,7 +18,7 @@ const { page } = Astro.props;
 const isFirstPage = page.currentPage === 1;
 const pageTitle = isFirstPage
   ? SITE_NAME
-  : `${SITE_NAME} — Trang ${page.currentPage}`;
+  : `${SITE_NAME} — Page ${page.currentPage}`;
 
 // Trang đầu: bài mới nhất làm nổi bật, còn lại vào lưới
 const featured = isFirstPage ? page.data[0] : null;
@@ -48,7 +48,7 @@ const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
     )
   }
 
-  {gridPosts.length > 0 && <h2 class="section-title">Bài viết mới nhất</h2>}
+  {gridPosts.length > 0 && <h2 class="section-title">Latest posts</h2>}
 
   <ul class="post-grid">
     {
@@ -67,17 +67,17 @@ const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
 
   {
     page.lastPage > 1 && (
-      <nav class="pagination" aria-label="Phân trang">
-        {page.url.prev ? <a href={page.url.prev}>← Trước</a> : <span class="disabled">← Trước</span>}
-        <span class="page-info">Trang {page.currentPage} / {page.lastPage}</span>
-        {page.url.next ? <a href={page.url.next}>Sau →</a> : <span class="disabled">Sau →</span>}
+      <nav class="pagination" aria-label="Pagination">
+        {page.url.prev ? <a href={page.url.prev}>← Prev</a> : <span class="disabled">← Prev</span>}
+        <span class="page-info">Page {page.currentPage} / {page.lastPage}</span>
+        {page.url.next ? <a href={page.url.next}>Next →</a> : <span class="disabled">Next →</span>}
       </nav>
     )
   }
 
   {
     page.data.length === 0 && (
-      <p>Chưa có bài viết nào. Thêm file .md vào <code>src/content/posts/</code>.</p>
+      <p>No posts yet. Add a .md file to <code>src/content/posts/</code>.</p>
     )
   }
 </BaseLayout>

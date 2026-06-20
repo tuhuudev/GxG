@@ -6,7 +6,23 @@ import {
   SITE_LANG,
   DEFAULT_OG_IMAGE,
   DEFAULT_AUTHOR,
+  SITE_LOGO,
+  SOCIAL_LINKS,
+  TWITTER_HANDLE,
 } from "../consts";
+
+interface Crumb {
+  name: string;
+  url?: string;
+}
+interface VideoMeta {
+  /** YouTube video ID (11 ký tự) */
+  id: string;
+  title?: string;
+  description?: string;
+  /** ISO date (mặc định = publishDate) */
+  uploadDate?: string;
+}
 
 interface Props {
   title: string;
@@ -19,6 +35,14 @@ interface Props {
   modifiedDate?: Date;
   author?: string;
   tags?: string[];
+  /** Breadcrumb cho JSON-LD BreadcrumbList (name + url tuyệt đối/tương đối) */
+  breadcrumbs?: Crumb[];
+  /** Video YouTube nhúng trong bài -> JSON-LD VideoObject (video rich result) */
+  video?: VideoMeta;
+  /** Bài tin/thời sự -> dùng schema NewsArticle (freshness cho Google News) */
+  news?: boolean;
+  /** Trang hồ sơ tác giả (E-E-A-T) -> author.url trong JSON-LD */
+  authorUrl?: string;
 }
 
 const {
@@ -30,46 +54,104 @@ const {
   modifiedDate,
   author = DEFAULT_AUTHOR,
   tags = [],
+  breadcrumbs = [],
+  video,
+  news = false,
+  authorUrl,
 } = Astro.props;
 
 // URL tuyệt đối của trang hiện tại -> canonical chuẩn
 const canonicalURL = new URL(Astro.url.pathname, SITE_URL).href;
 // Ảnh OG luôn ở dạng tuyệt đối (Facebook yêu cầu)
 const ogImageURL = new URL(image, SITE_URL).href;
+const abs = (u: string) => new URL(u, SITE_URL).href;
 
 // Tiêu đề trên tab: "Tiêu đề bài | Tên trang"
 const fullTitle =
   title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
 
-// JSON-LD structured data cho Google
-const jsonLd =
-  type === "article"
-    ? {
-        "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        headline: title,
-        description,
-        image: ogImageURL,
-        datePublished: publishDate?.toISOString(),
-        dateModified: (modifiedDate ?? publishDate)?.toISOString(),
-        author: { "@type": "Person", name: author },
-        publisher: {
-          "@type": "Organization",
-          name: SITE_NAME,
-          logo: {
-            "@type": "ImageObject",
-            url: new URL("/logo.png", SITE_URL).href,
-          },
-        },
-        mainEntityOfPage: { "@type": "WebPage", "@id": canonicalURL },
-      }
-    : {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        name: SITE_NAME,
-        description,
-        url: SITE_URL,
-      };
+// ---- JSON-LD: gom nhiều thực thể vào @graph ----
+const org = {
+  "@type": "Organization",
+  "@id": `${SITE_URL}#org`,
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: { "@type": "ImageObject", url: abs(SITE_LOGO) },
+  ...(SOCIAL_LINKS.length ? { sameAs: SOCIAL_LINKS } : {}),
+};
+
+const graph: Record<string, unknown>[] = [org];
+
+if (type === "article") {
+  graph.push({
+    "@type": news ? "NewsArticle" : "BlogPosting",
+    headline: title,
+    description,
+    image: ogImageURL,
+    inLanguage: SITE_LANG,
+    datePublished: publishDate?.toISOString(),
+    dateModified: (modifiedDate ?? publishDate)?.toISOString(),
+    author: {
+      "@type": "Person",
+      name: author,
+      ...(authorUrl ? { url: abs(authorUrl) } : {}),
+    },
+    publisher: { "@id": `${SITE_URL}#org` },
+    ...(tags.length ? { keywords: tags.join(", ") } : {}),
+    mainEntityOfPage: { "@type": "WebPage", "@id": canonicalURL },
+    // Speakable -> trợ lý giọng nói có thể đọc tóm tắt (khớp tính năng audio).
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".article-lead", ".takeaways"],
+    },
+  });
+} else {
+  graph.push({
+    "@type": "WebSite",
+    "@id": `${SITE_URL}#website`,
+    name: SITE_NAME,
+    description,
+    url: SITE_URL,
+    inLanguage: SITE_LANG,
+    publisher: { "@id": `${SITE_URL}#org` },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${SITE_URL}/tim-kiem?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  });
+}
+
+// VideoObject khi bài có nhúng video YouTube -> đủ điều kiện video rich result
+if (video?.id) {
+  graph.push({
+    "@type": "VideoObject",
+    name: video.title ?? title,
+    description: video.description ?? description,
+    thumbnailUrl: [`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`],
+    uploadDate: video.uploadDate ?? publishDate?.toISOString(),
+    contentUrl: `https://www.youtube.com/watch?v=${video.id}`,
+    embedUrl: `https://www.youtube.com/embed/${video.id}`,
+  });
+}
+
+// BreadcrumbList khi có breadcrumb
+if (breadcrumbs.length) {
+  graph.push({
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbs.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: c.name,
+      ...(c.url ? { item: abs(c.url) } : {}),
+    })),
+  });
+}
+
+const jsonLd = { "@context": "https://schema.org", "@graph": graph };
 ---
 
 <!-- Cơ bản -->
@@ -90,6 +172,7 @@ const jsonLd =
 <meta property="og:image" content={ogImageURL} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={title} />
 {
   type === "article" && publishDate && (
     <meta
@@ -113,6 +196,7 @@ const jsonLd =
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
+{TWITTER_HANDLE && <meta name="twitter:site" content={TWITTER_HANDLE} />}
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImageURL} />

@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import SEO from "../components/SEO.astro";
 import ThemeToggle from "../components/ThemeToggle.astro";
-import { SITE_NAME, SITE_LANG, FACEBOOK_URL } from "../consts";
+import { SITE_NAME, SITE_LANG, FACEBOOK_URL, PLAUSIBLE_DOMAIN, GA4_ID } from "../consts";
 import { categoryUrl } from "../utils";
 import "@fontsource/be-vietnam-pro/400.css";
 import "@fontsource/be-vietnam-pro/600.css";
@@ -18,6 +18,10 @@ interface Props {
   modifiedDate?: Date;
   author?: string;
   tags?: string[];
+  breadcrumbs?: { name: string; url?: string }[];
+  video?: { id: string; title?: string; description?: string; uploadDate?: string };
+  news?: boolean;
+  authorUrl?: string;
   /** Hiện thanh tiến độ đọc (cho trang bài viết) */
   showProgress?: boolean;
 }
@@ -38,6 +42,18 @@ const categories = [...new Set(allPosts.map((p) => p.data.category))].sort();
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE_NAME} — Podcast`} href="/podcast.xml" />
+
+    {/* Analytics (chỉ nhúng khi đã cấu hình trong consts.ts) */}
+    {PLAUSIBLE_DOMAIN && (
+      <script defer data-domain={PLAUSIBLE_DOMAIN} src="https://plausible.io/js/script.js"></script>
+    )}
+    {GA4_ID && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}></script>
+        <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA4_ID}');`}></script>
+      </>
+    )}
     {/* Đặt theme trước khi render để tránh nhấp nháy (FOUC) */}
     <script is:inline>
       (() => {
@@ -59,17 +75,18 @@ const categories = [...new Set(allPosts.map((p) => p.data.category))].sort();
     <header class="site-header">
       <div class="container header-inner">
         <a href="/" class="brand" aria-label={SITE_NAME}>
-          <img src="/logo.svg" alt={SITE_NAME} width="40" height="40" />
+          <img src="/logo.png" alt={SITE_NAME} width="40" height="40" />
           <span class="visually-hidden">{SITE_NAME}</span>
         </a>
 
-        <nav class="nav" aria-label="Chuyên mục">
-          <a href="/">Trang chủ</a>
+        <nav class="nav" aria-label="Categories">
+          <a href="/">Home</a>
+          <a href="/videos">Videos</a>
           {categories.map((cat) => <a href={categoryUrl(cat)}>{cat}</a>)}
         </nav>
 
         <div class="header-actions">
-          <a class="icon-btn" href="/tim-kiem" aria-label="Tìm kiếm" title="Tìm kiếm">
+          <a class="icon-btn" href="/tim-kiem" aria-label="Search" title="Search">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="11" cy="11" r="7"></circle>
               <path d="m21 21-4.3-4.3"></path>
@@ -89,34 +106,35 @@ const categories = [...new Set(allPosts.map((p) => p.data.category))].sort();
         <div class="footer-grid">
           <div>
             <div class="footer-brand">
-              <img src="/logo.svg" alt={SITE_NAME} width="36" height="36" style="border-radius:8px" />
+              <img src="/logo.png" alt={SITE_NAME} width="36" height="36" style="border-radius:8px" />
               <strong style="color:var(--text)">{SITE_NAME}</strong>
             </div>
-            <p style="margin:0">Chia sẻ bài viết, ý tưởng và kiến thức hữu ích — tốc độ nhanh, đọc mượt.</p>
+            <p style="margin:0">Mind-blowing facts &amp; unsolved mysteries — a new one every day, in under a minute.</p>
           </div>
           <div>
-            <h3>Chuyên mục</h3>
+            <h3>Categories</h3>
             <ul>
               {categories.map((cat) => <li><a href={categoryUrl(cat)}>{cat}</a></li>)}
             </ul>
           </div>
           <div>
-            <h3>Liên kết</h3>
+            <h3>Links</h3>
             <ul>
-              <li><a href="/">Trang chủ</a></li>
-              <li><a href="/tim-kiem">Tìm kiếm</a></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="/videos">Videos</a></li>
+              <li><a href="/tim-kiem">Search</a></li>
               <li><a href="/rss.xml">RSS</a></li>
               <li><a href={FACEBOOK_URL} target="_blank" rel="noopener">Facebook</a></li>
             </ul>
           </div>
         </div>
         <div class="footer-bottom">
-          <p style="margin:0">© {year} {SITE_NAME}. Đã đăng ký bản quyền.</p>
+          <p style="margin:0">© {year} {SITE_NAME}. All rights reserved.</p>
         </div>
       </div>
     </footer>
 
-    <button class="icon-btn scroll-top" id="scrollTop" type="button" aria-label="Lên đầu trang" title="Lên đầu trang">
+    <button class="icon-btn scroll-top" id="scrollTop" type="button" aria-label="Back to top" title="Back to top">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="m18 15-6-6-6 6"></path>
       </svg>

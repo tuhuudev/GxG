@@ -48,11 +48,12 @@ function slugify(input) {
     .replace(/-+/g, "-");
 }
 
-// Lấy tên trang từ src/consts.ts để không lặp cấu hình
-async function getSiteName() {
+// Lấy tên trang + mô tả từ src/consts.ts để không lặp cấu hình
+async function getSiteMeta() {
   const consts = await fs.readFile(path.join(ROOT, "src", "consts.ts"), "utf-8");
-  const m = consts.match(/SITE_NAME\s*=\s*"([^"]+)"/);
-  return m ? m[1] : "Blog";
+  const name = consts.match(/SITE_NAME\s*=\s*"([^"]+)"/);
+  const desc = consts.match(/SITE_DESCRIPTION\s*=\s*"([^"]+)"/);
+  return { siteName: name ? name[1] : "Blog", tagline: desc ? desc[1] : "" };
 }
 
 function template({ title, category, siteName }) {
@@ -76,8 +77,20 @@ async function main() {
     { name: "Be Vietnam Pro", data: bold, weight: 700, style: "normal" },
   ];
 
-  const siteName = await getSiteName();
+  const { siteName, tagline } = await getSiteMeta();
   await fs.mkdir(OUT_DIR, { recursive: true });
+
+  // Ảnh OG mặc định (trang chủ/category/tìm kiếm/bài không có ogImage riêng) -> /og-default.png
+  const defMarkup = html(`
+    <div style="width:1200px;height:630px;display:flex;flex-direction:column;justify-content:center;gap:28px;padding:96px;background-color:#0f172a;background-image:linear-gradient(135deg,#1e3a8a 0%,#0f172a 100%);font-family:'Be Vietnam Pro';color:#ffffff;">
+      <div style="display:flex;font-size:84px;font-weight:700;">${siteName}</div>
+      <div style="display:flex;font-size:34px;font-weight:400;color:rgba(255,255,255,0.85);">${tagline}</div>
+    </div>
+  `);
+  const defSvg = await satori(defMarkup, { width: 1200, height: 630, fonts });
+  const defPng = new Resvg(defSvg, { fitTo: { mode: "width", value: 1200 } }).render().asPng();
+  await fs.writeFile(path.join(ROOT, "public", "og-default.png"), defPng);
+  console.log("  ✓ og-default.png");
 
   const files = (await fs.readdir(POSTS_DIR)).filter((f) => f.endsWith(".md"));
   let count = 0;

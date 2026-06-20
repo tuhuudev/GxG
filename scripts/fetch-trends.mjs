@@ -9,7 +9,6 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
-import { parse as parseCsv } from "csv-parse/sync";
 import {
   ROOT,
   DEFAULT_TEXT_MODEL,
@@ -110,17 +109,19 @@ export async function fetchRawTrends({ perSource = 12 } = {}) {
   return deduped;
 }
 
-// Doc tieu de cac bai DA CO tu Google Sheet (SHEET_CSV_URL) de tranh goi y trung.
+// Doc tieu de cac bai DA CO tu file .md trong src/content/posts de tranh goi y trung.
 export async function fetchExistingTitles() {
-  const url = process.env.SHEET_CSV_URL;
-  if (!url || !url.startsWith("http")) return [];
+  const dir = path.join(ROOT, "src", "content", "posts");
   try {
-    const res = await fetch(url, { redirect: "follow" });
-    if (!res.ok) return [];
-    const rows = parseCsv(await res.text(), { columns: true, skip_empty_lines: true, trim: true });
-    return rows
-      .map((r) => (r.title || r.Title || "").trim())
-      .filter(Boolean);
+    const files = await fs.readdir(dir);
+    const titles = [];
+    for (const f of files) {
+      if (!f.endsWith(".md")) continue;
+      const raw = await fs.readFile(path.join(dir, f), "utf-8");
+      const m = raw.match(/^title:\s*["']?(.+?)["']?\s*$/m);
+      if (m) titles.push(m[1].trim());
+    }
+    return titles;
   } catch {
     return [];
   }
@@ -174,7 +175,7 @@ export async function fetchTrendIdeas({ count = 8, apiKey, textModel } = {}) {
   const model = textModel || process.env.GEMINI_TEXT_MODEL || DEFAULT_TEXT_MODEL;
 
   const existing = await fetchExistingTitles();
-  if (existing.length) console.log(`[trends] Da co ${existing.length} bai trong Sheet -> tranh trung.`);
+  if (existing.length) console.log(`[trends] Da co ${existing.length} bai (local) -> tranh trung.`);
 
   const response = await geminiGenerate(model, key, {
     contents: [{ parts: [{ text: buildRankPrompt(raw, count, existing) }] }],

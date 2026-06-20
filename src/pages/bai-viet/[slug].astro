@@ -5,6 +5,7 @@ import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import TableOfContents from "../../components/TableOfContents.astro";
 import ShareButtons from "../../components/ShareButtons.astro";
 import RelatedPosts from "../../components/RelatedPosts.astro";
+import Comments from "../../components/Comments.astro";
 import {
   formatDate,
   isoDate,
@@ -16,6 +17,8 @@ import {
   readingTime,
 } from "../../utils";
 import { DEFAULT_AUTHOR, SITE_URL, SITE_NAME } from "../../consts";
+import fs from "node:fs";
+import path from "node:path";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts", ({ data }) => !data.draft);
@@ -54,6 +57,28 @@ const ogImage = ogImageFor(data.title, data.ogImage);
 const time = readingTime(post.body ?? "");
 const initial = author.charAt(0).toUpperCase();
 const catGradient = categoryGradientCss(data.category);
+
+// Nếu bài nhúng video YouTube -> khai báo VideoObject (video rich result).
+const videoId = (post.body ?? "").match(/youtube\.com\/embed\/([\w-]{11})/)?.[1];
+const video = videoId
+  ? {
+      id: videoId,
+      title: data.title,
+      description: data.description,
+      uploadDate: data.pubDate.toISOString(),
+    }
+  : undefined;
+
+// Breadcrumb cho JSON-LD BreadcrumbList (khớp với <Breadcrumbs> hiển thị).
+const crumbs = [
+  { name: "Home", url: "/" },
+  { name: data.category, url: categoryUrl(data.category) },
+  { name: data.title },
+];
+
+// Bản đọc audio (do dự án video sinh bằng edge-tts) -> nút "Nghe bài viết".
+const audioSrc = `/audio/${slugify(data.title)}.mp3`;
+const hasAudio = fs.existsSync(path.join(process.cwd(), "public", "audio", `${slugify(data.title)}.mp3`));
 ---
 
 <BaseLayout
@@ -65,12 +90,15 @@ const catGradient = categoryGradientCss(data.category);
   modifiedDate={data.updatedDate}
   author={author}
   tags={data.tags}
+  breadcrumbs={crumbs}
+  video={video}
+  news={data.news}
   showProgress
 >
   <article class="article" data-pagefind-body>
     <Breadcrumbs
       items={[
-        { label: "Trang chủ", href: "/" },
+        { label: "Home", href: "/" },
         { label: data.category, href: categoryUrl(data.category) },
         { label: data.title },
       ]}
@@ -87,6 +115,13 @@ const catGradient = categoryGradientCss(data.category);
           <span class="name">{author}</span>
           <span class="meta">
             <time datetime={isoDate(data.pubDate)}>{formatDate(data.pubDate)}</time>
+            {
+              data.updatedDate && (
+                <span class="dot">
+                  Updated <time datetime={isoDate(data.updatedDate)}>{formatDate(data.updatedDate)}</time>
+                </span>
+              )
+            }
             <span class="dot">{time}</span>
           </span>
         </span>
@@ -111,6 +146,28 @@ const catGradient = categoryGradientCss(data.category);
       <TableOfContents headings={headings} />
 
       <div class="article-main">
+        {
+          data.takeaways.length > 0 && (
+            <aside class="takeaways" aria-label="Key takeaways">
+              <p class="takeaways-title">⚡ Key takeaways</p>
+              <ul>
+                {data.takeaways.map((t) => (
+                  <li>{t}</li>
+                ))}
+              </ul>
+            </aside>
+          )
+        }
+
+        {
+          hasAudio && (
+            <div class="audio-player">
+              <span class="audio-label">🎧 Listen</span>
+              <audio controls preload="none" src={audioSrc}></audio>
+            </div>
+          )
+        }
+
         <div class="prose">
           <Content />
         </div>
@@ -126,10 +183,45 @@ const catGradient = categoryGradientCss(data.category);
         }
 
         <ShareButtons url={absoluteUrl} title={data.title} />
-        <a class="back-link" href="/">← Về trang chủ</a>
+        <a class="back-link" href="/">← Back to home</a>
       </div>
     </div>
 
     <RelatedPosts posts={related} />
+    <Comments />
   </article>
 </BaseLayout>
+
+<style>
+  .takeaways {
+    margin: 0 0 1.5rem;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--border, #e5e7eb);
+    border-left: 4px solid var(--accent, #3b82f6);
+    border-radius: 12px;
+    background: var(--surface, rgba(59, 130, 246, 0.06));
+  }
+  .takeaways-title {
+    margin: 0 0 0.5rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .takeaways ul { margin: 0; padding-left: 1.2rem; }
+  .takeaways li { margin: 0.3rem 0; line-height: 1.5; }
+
+  .audio-player {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+    margin: 0 0 1.5rem;
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 12px;
+    background: var(--surface, rgba(0, 0, 0, 0.03));
+  }
+  .audio-player .audio-label { font-weight: 600; white-space: nowrap; }
+  .audio-player audio { flex: 1; min-width: 220px; height: 36px; }
+</style>

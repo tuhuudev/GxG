@@ -167,6 +167,31 @@ export function parseJsonArray(text) {
   return JSON.parse(cleaned.slice(start, end + 1));
 }
 
+// Nguon UGC/dien dan -> bo khoi danh sach nguon (giu uy tin).
+const LOW_CRED = ["reddit.", "quora.", "stackexchange.", "stackoverflow.", "medium.com",
+                  "pinterest.", "facebook."];
+
+// Grounding tra URL redirect tam cua Google (grounding-api-redirect) -> giai ve URL goc.
+// Loi/timeout -> giu nguyen URL cu.
+async function resolveRedirect(uri) {
+  if (!uri.includes("grounding-api-redirect")) return uri;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 8000);
+  try {
+    const r = await fetch(uri, {
+      method: "HEAD",
+      redirect: "follow",
+      signal: ctrl.signal,
+      headers: { "User-Agent": "Mozilla/5.0" },
+    });
+    return r.url || uri;
+  } catch {
+    return uri;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 // Buoc 1 (grounding): nho Gemini tra Google de lay SU THAT + nguon, truoc khi viet bai.
 // Tra ve { brief, sources: [{title, uri}] }.
 async function researchTopic(opts, apiKey) {
@@ -186,15 +211,28 @@ Neu thong tin chua ro rang hoac trai chieu, hay noi ro.
 
   const brief = getText(response) || "";
   const chunks = response?.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
+  const raw = [];
   const seen = new Set();
-  const sources = [];
   for (const c of chunks) {
     const w = c.web || c.retrievedContext;
     if (!w?.uri || seen.has(w.uri)) continue;
     seen.add(w.uri);
-    sources.push({ title: w.title || w.uri, uri: w.uri });
+    raw.push({ title: w.title || w.uri, uri: w.uri });
   }
-  return { brief, sources };
+  // Grounding trả URL redirect TẠM của Google (sẽ hết hạn) -> giải về URL gốc của báo
+  // để nguồn rõ ràng & bền. Bỏ nguồn UGC/diễn đàn. Giữ tối đa 12 nguồn.
+  const resolved = await Promise.all(
+    raw.map(async (s) => ({ title: s.title, uri: await resolveRedirect(s.uri) }))
+  );
+  const out = [];
+  const seenFinal = new Set();
+  for (const s of resolved) {
+    if (seenFinal.has(s.uri)) continue;
+    if (LOW_CRED.some((b) => s.uri.includes(b))) continue;
+    seenFinal.add(s.uri);
+    out.push(s);
+  }
+  return { brief, sources: out.slice(0, 12) };
 }
 
 function buildPostPrompt(opts, research) {
@@ -240,6 +278,7 @@ Tra ve DUY NHAT JSON hop le, khong markdown fence, theo schema:
   "description": "Mo ta SEO 130-160 ky tu",
   "category": "Ten chuyen muc ngan",
   "tags": ["tag 1", "tag 2"],
+  "takeaways": ["3-5 gach dau dong tom tat y chinh, moi cau ngan gon"],
   "imagePrompt": "Prompt tieng Anh de tao anh blog cover 16:9, khong chu, khong logo, khong watermark",
   "imageQuery": "2-4 tu khoa tieng Anh DON GIAN de tim anh stock (vd: smartphone battery, self driving car)",
   "videoQuery": "2-5 tu khoa tieng Viet GON, SAT chu de de tim video YouTube minh hoa (vd: meo bao quan pin dien thoai android)",
@@ -391,6 +430,11 @@ function frontmatter(post, opts, ogImage) {
     `tags: [${tags.map(yamlString).join(", ")}]`,
     `author: ${yamlString(opts.author)}`,
   ];
+  const takeaways = Array.isArray(post.takeaways) ? post.takeaways.filter(Boolean) : [];
+  if (takeaways.length) {
+    lines.push("takeaways:");
+    for (const t of takeaways) lines.push(`  - ${yamlString(t)}`);
+  }
   if (ogImage) lines.push(`ogImage: ${yamlString(ogImage)}`);
   if (opts.draft) lines.push("draft: true");
   lines.push("---", "", String(post.body || "").trim(), "");

@@ -1,5 +1,5 @@
 // Upload media (anh, video) len Cloudflare R2 bang S3 API (aws4fetch).
-// Tra ve URL cong khai de luu vao Google Sheet / frontmatter bai viet.
+// Tra ve URL cong khai de luu vao frontmatter bai viet (ogImage).
 //
 // Can cac bien moi truong (trong .env):
 //   R2_ACCOUNT_ID        - Account ID cua Cloudflare

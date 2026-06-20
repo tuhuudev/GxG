@@ -17,8 +17,6 @@ import {
   generatePostBundle,
   writePostFile,
 } from "./lib/ai-post.mjs";
-import { appendPostRow, isSheetWriteConfigured } from "./lib/sheet-write.mjs";
-import { triggerDeploy, isDeployHookConfigured } from "./lib/deploy.mjs";
 import { fetchTrendIdeas } from "./fetch-trends.mjs";
 
 function parseArgs(argv) {
@@ -56,12 +54,12 @@ async function main() {
   const opts = parseArgs(process.argv.slice(2));
   if (opts.help) {
     console.log(`
-Do trend -> tu chon chu de tot nhat -> tao bai (mac dinh ghi vao Google Sheet, status=draft).
+Do trend -> tu chon chu de tot nhat -> tao bai .md trong src/content/posts.
+Mac dinh tao BAN NHAP (draft: true, chua hien tren web) de ban duyet truoc.
   npm run ai:auto                  Tao 1 bai nhap tu chu de hot nhat
   npm run ai:auto -- --count 3     Tao 3 bai nhap
-  npm run ai:auto -- --publish     Dang thang (status=published)
+  npm run ai:auto -- --publish     Dang thang (khong draft -> hien luon)
   npm run ai:auto -- --no-image    Khong tao anh
-  npm run ai:auto -- --local       Ghi file .md thay vi Sheet (test/offline)
 `);
     return;
   }
@@ -76,11 +74,6 @@ Do trend -> tu chon chu de tot nhat -> tao bai (mac dinh ghi vao Google Sheet, s
   console.log(`[auto] Se tao ${picked.length} bai${opts.draft ? " (nhap)" : " (dang thang)"}:`);
   picked.forEach((idea, i) => console.log(`  ${i + 1}. [${idea.category}] ${idea.topic}`));
   console.log("");
-
-  const toSheet = !opts.local && isSheetWriteConfigured();
-  if (!opts.local && !isSheetWriteConfigured()) {
-    console.warn("[auto] Chua cau hinh SHEET_WRITE_URL -> ghi file .md local.");
-  }
 
   let ok = 0;
   for (const idea of picked) {
@@ -102,23 +95,8 @@ Do trend -> tu chon chu de tot nhat -> tao bai (mac dinh ghi vao Google Sheet, s
         words: opts.words,
       };
       const { post, slug, ogImage } = await generatePostBundle(postOpts, apiKey);
-
-      if (toSheet) {
-        const status = opts.draft ? "draft" : "published";
-        await appendPostRow({
-          title: post.title,
-          description: post.description,
-          category: post.category || postOpts.category,
-          tags: post.tags,
-          body: post.body,
-          ogImage,
-          status,
-        });
-        console.log(`[auto] OK (Sheet, ${status}): "${post.title}"${ogImage ? ` (+ ${ogImage})` : ""}`);
-      } else {
-        const outPath = await writePostFile(post, postOpts, ogImage, slug);
-        console.log(`[auto] OK: ${path.relative(ROOT, outPath)}${ogImage ? ` (+ ${ogImage})` : ""}`);
-      }
+      const outPath = await writePostFile(post, postOpts, ogImage, slug);
+      console.log(`[auto] OK: ${path.relative(ROOT, outPath)}${ogImage ? ` (+ ${ogImage})` : ""}`);
       ok++;
     } catch (err) {
       console.warn(`[auto] Loi voi "${idea.topic}": ${err.message}`);
@@ -127,17 +105,8 @@ Do trend -> tu chon chu de tot nhat -> tao bai (mac dinh ghi vao Google Sheet, s
 
   console.log(`\n[auto] Xong ${ok}/${picked.length} bai.`);
   if (ok > 0) {
-    if (toSheet) {
-      console.log(opts.draft
-        ? "Cac bai o dang NHAP trong Sheet (status=draft). Mo Sheet de duyet, doi status=published roi build/deploy."
-        : "Cac bai da co status=published trong Sheet. Build/deploy de len web.");
-      if (!opts.draft && isDeployHookConfigured()) {
-        await triggerDeploy();
-        console.log("[auto] Da goi Deploy Hook -> Cloudflare se build lai.");
-      }
-    } else {
-      console.log("Da ghi file .md trong src/content/posts" + (opts.draft ? " (draft: true)." : "."));
-    }
+    console.log("Da ghi file .md trong src/content/posts" + (opts.draft ? " (draft: true)." : ".") +
+                " Commit + push de Cloudflare build lai.");
   }
 }
 

@@ -13,8 +13,6 @@ import {
   generatePostBundle,
   writePostFile,
 } from "./lib/ai-post.mjs";
-import { appendPostRow, isSheetWriteConfigured } from "./lib/sheet-write.mjs";
-import { triggerDeploy, isDeployHookConfigured } from "./lib/deploy.mjs";
 
 function parseArgs(argv) {
   const opts = {
@@ -62,19 +60,17 @@ function printHelp() {
   console.log(`
 Generate an AI blog post from a topic.
 
-Mac dinh: ghi 1 dong vao Google Sheet (database). Dung --local de ghi file .md.
+Ghi bai thanh file .md trong src/content/posts (commit + push de Cloudflare build lai).
 
 Commands:
   npm run ai:post -- "Chu de bai viet"
   npm run ai:post -- "AI marketing cho shop nho" --category "Marketing" --tags "AI, ban hang"
-  npm run ai:post -- "Kinh nghiem du lich Da Lat" --draft           (ghi Sheet, status=draft)
-  npm run ai:post -- "Checklist SEO" --local --local-image          (ghi file .md + anh local)
+  npm run ai:post -- "Kinh nghiem du lich Da Lat" --draft           (them draft: true)
 
 Environment:
   GEMINI_API_KEY       Required
   GEMINI_TEXT_MODEL    Optional, default ${DEFAULT_TEXT_MODEL}
   GEMINI_IMAGE_MODEL   Optional, default ${DEFAULT_IMAGE_MODEL}
-  SHEET_WRITE_URL      De ghi vao Sheet (neu thieu se ghi file .md local)
   R2_*                 De luu anh len Cloudflare R2 (xem huong dan)
 `);
 }
@@ -91,31 +87,8 @@ async function main() {
   const apiKey = requireApiKey();
   const { post, slug, ogImage } = await generatePostBundle(opts, apiKey);
 
-  const toSheet = !opts.local && isSheetWriteConfigured();
-  if (!opts.local && !isSheetWriteConfigured()) {
-    console.warn("[ai] Chua cau hinh SHEET_WRITE_URL -> ghi file .md local.");
-  }
-
-  if (toSheet) {
-    const status = opts.draft ? "draft" : "published";
-    await appendPostRow({
-      title: post.title,
-      description: post.description,
-      category: post.category || opts.category,
-      tags: post.tags,
-      body: post.body,
-      ogImage,
-      status,
-    });
-    console.log(`[ai] Da them 1 dong vao Sheet (status=${status}): "${post.title}"`);
-    if (status === "published" && isDeployHookConfigured()) {
-      await triggerDeploy();
-      console.log("[ai] Da goi Deploy Hook -> Cloudflare se build lai.");
-    }
-  } else {
-    const outPath = await writePostFile(post, opts, ogImage, slug);
-    console.log(`[ai] Created ${path.relative(ROOT, outPath)}`);
-  }
+  const outPath = await writePostFile(post, opts, ogImage, slug);
+  console.log(`[ai] Created ${path.relative(ROOT, outPath)}`);
   if (ogImage) console.log(`[ai] Image ${ogImage}`);
 }
 

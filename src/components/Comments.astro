@@ -1,0 +1,61 @@
+---
+// Bình luận qua giscus (GitHub Discussions). Chỉ render khi đã cấu hình GISCUS.repo
+// trong src/consts.ts. Theme tự đồng bộ sáng/tối theo trang.
+import { GISCUS } from "../consts";
+const enabled = Boolean(GISCUS.repo && GISCUS.repoId && GISCUS.categoryId);
+---
+
+{
+  enabled && (
+    <section class="comments" aria-label="Bình luận">
+      <h2>Bình luận</h2>
+      <div id="giscus"></div>
+      <script
+        is:inline
+        define:vars={{
+          repo: GISCUS.repo,
+          repoId: GISCUS.repoId,
+          category: GISCUS.category,
+          categoryId: GISCUS.categoryId,
+        }}
+      >
+        (() => {
+          const theme =
+            document.documentElement.dataset.theme === "dark"
+              ? "dark"
+              : "light";
+          const s = document.createElement("script");
+          s.src = "https://giscus.app/client.js";
+          s.async = true;
+          s.crossOrigin = "anonymous";
+          Object.assign(s.dataset, {
+            repo,
+            repoId,
+            category,
+            categoryId,
+            mapping: "pathname",
+            strict: "1",
+            reactionsEnabled: "1",
+            emitMetadata: "0",
+            inputPosition: "top",
+            theme,
+            lang: "vi",
+            loading: "lazy",
+          });
+          document.getElementById("giscus").appendChild(s);
+        })();
+      </script>
+    </section>
+  )
+}
+
+<style>
+  .comments {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border, #e5e7eb);
+  }
+  .comments h2 {
+    margin: 0 0 1rem;
+  }
+</style>

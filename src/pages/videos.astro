@@ -1,0 +1,111 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { YOUTUBE_URL } from "../consts";
+
+// Danh sách video Mystery Box (id YouTube + tiêu đề). Thêm video mới ở đây.
+const VIDEOS: { id: string; title: string }[] = [
+  { id: "QY0sKc3Z1f0", title: "This Shark Is Older Than Your Country" },
+  { id: "iRLCiF6gt5k", title: "This Animal Has Three Hearts And Blue Blood" },
+  { id: "0Zhnf7kBhCg", title: "Science Can't Explain Deja Vu" },
+  { id: "e9VhcbDdNm8", title: "It Rains Diamonds On This Planet" },
+  { id: "xaQN6Cv9208", title: "This Animal Can Never Die" },
+  { id: "AYsjlLdQDI4", title: "Cleopatra Lived Closer To The Moon Landing" },
+  { id: "ge6c9zNjSUM", title: "This Food Never Spoils" },
+  { id: "85tuy7D-2QY", title: "We Heard Aliens Once Then Silence" },
+  { id: "DpnkRd5kETI", title: "Your Body Glows In The Dark" },
+  { id: "mCZcDms3ROo", title: "3 Body Secrets You Were Never Told" },
+  { id: "RGA4YkXHog8", title: "You Remember Something That Never Happened" },
+  { id: "K_C-ByccuFw", title: "This Shrimp Is Louder Than A Gunshot" },
+  { id: "A2T3LNkCSZs", title: "Wombat Poop Cubes: The Mystery Uncovered" },
+  { id: "FDuwASQL88Q", title: "Mystery Fish Rain in Honduras" },
+  { id: "Wb9rKsErMlY", title: "Stars vs Sand: The Cosmic Count" },
+  { id: "7352hksWc6A", title: "The Microscopic Animal That Defies Death" },
+  { id: "CvvEKFBg5-w", title: "Turtles' Wild Secret: Butt Breathing!" },
+  { id: "gwvZ5qzQkuI", title: "Hippo's Secret: The Red 'Blood Sweat'" },
+];
+
+const title = "Videos";
+const description =
+  "Watch every Mystery Box short — surprising facts and unsolved mysteries about space, animals, history, the human body and the universe, each told in under a minute.";
+
+// SEO: ItemList of VideoObjects
+const itemList = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  itemListElement: VIDEOS.map((v, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    url: `https://www.youtube.com/watch?v=${v.id}`,
+    name: v.title,
+  })),
+};
+---
+
+<BaseLayout title={title} description={description} type="website">
+  <section class="page-intro">
+    <h1>Mystery Box — Videos</h1>
+    <p>{description}</p>
+    {YOUTUBE_URL && (
+      <p>
+        <a class="btn" href={YOUTUBE_URL} target="_blank" rel="noopener"
+          >▶ Subscribe on YouTube</a
+        >
+      </p>
+    )}
+  </section>
+
+  <div class="video-grid">
+    {
+      VIDEOS.map((v) => (
+        <article class="video-card">
+          <div class="video-embed">
+            <iframe
+              src={`https://www.youtube.com/embed/${v.id}`}
+              title={v.title}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            />
+          </div>
+          <h2 class="video-title">{v.title}</h2>
+        </article>
+      ))
+    }
+  </div>
+
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(itemList)}
+  />
+
+  <style>
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .video-card {
+      background: var(--card, rgba(127, 127, 127, 0.06));
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .video-embed {
+      position: relative;
+      padding-top: 56.25%;
+    }
+    .video-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .video-title {
+      font-size: 1rem;
+      line-height: 1.35;
+      margin: 0.75rem 0.9rem 1rem;
+    }
+  </style>
+</BaseLayout>

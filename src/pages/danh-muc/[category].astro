@@ -26,16 +26,16 @@ export async function getStaticPaths() {
 }
 
 const { name, posts } = Astro.props;
-const title = `Chuyên mục: ${name}`;
-const description = `Tổng hợp các bài viết thuộc chuyên mục ${name} trên ${SITE_NAME}.`;
+const title = `Category: ${name}`;
+const description = `All posts in the ${name} category on ${SITE_NAME}.`;
 ---
 
 <BaseLayout title={title} description={description} type="website">
-  <Breadcrumbs items={[{ label: "Trang chủ", href: "/" }, { label: name }]} />
+  <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: name }]} />
 
   <section class="page-intro">
     <h1>{name}</h1>
-    <p>{posts.length} bài viết trong chuyên mục này</p>
+    <p>{posts.length} posts in this category</p>
   </section>
 
   <ul class="post-grid">

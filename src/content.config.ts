@@ -15,6 +15,10 @@ const posts = defineCollection({
     tags: z.array(z.string()).default([]),
     author: z.string().optional(),
     draft: z.boolean().default(false),
+    // Tóm tắt nhanh (gạch đầu dòng) hiện ở đầu bài — hợp tin trending, giúp đọc nhanh.
+    takeaways: z.array(z.string()).default([]),
+    // Bài tin/thời sự -> dùng schema NewsArticle (thay vì BlogPosting) cho freshness.
+    news: z.boolean().default(false),
   }),
 });
 

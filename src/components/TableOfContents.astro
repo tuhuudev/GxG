@@ -11,8 +11,8 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
 {
   toc.length > 1 && (
-    <nav class="toc" aria-label="Mục lục">
-      <p class="toc-title">Mục lục</p>
+    <nav class="toc" aria-label="Contents">
+      <p class="toc-title">Contents</p>
       <ul>
         {toc.map((h) => (
           <li class={`depth-${h.depth}`}>
@@ -23,6 +23,18 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     </nav>
   )
 }
+
+<style>
+  /* TOC dính theo khi cuộn (chỉ trên màn rộng có sidebar) */
+  @media (min-width: 1024px) {
+    .toc {
+      position: sticky;
+      top: 1.5rem;
+      max-height: calc(100vh - 3rem);
+      overflow-y: auto;
+    }
+  }
+</style>
 
 <script is:inline>
   // Tô sáng mục đang xem khi cuộn
