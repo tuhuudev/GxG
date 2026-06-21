@@ -2,7 +2,7 @@
 title: "Cách làm bánh mì giòn tại nhà cực đơn giản"
 description: "Hướng dẫn từng bước làm bánh mì vỏ giòn, ruột xốp ngay tại nhà chỉ với vài nguyên liệu cơ bản. Ai cũng làm được ngay lần đầu."
 pubDate: 2026-05-28
-category: "Ẩm thực"
+category: "Food Science"
 tags: ["nấu ăn", "bánh mì", "công thức"]
 author: "GxG"
 ---

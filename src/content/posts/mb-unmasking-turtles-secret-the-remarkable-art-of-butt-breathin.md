@@ -2,7 +2,7 @@
 title: "Unmasking Turtles' Secret: The Remarkable Art of Butt Breathing"
 description: "Explore the astonishing survival strategy of some turtles that breathe through their cloaca, staying submerged for months, especially during winter dormancy."
 pubDate: 2026-06-21
-category: "Wildlife Biology"
+category: "Animals & Wildlife"
 tags: ["turtles", "cloacal respiration", "aquatic adaptations", "winter dormancy", "Fitzroy River turtle", "animal physiology", "survival"]
 author: "Mystery Box"
 ---

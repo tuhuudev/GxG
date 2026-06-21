@@ -2,7 +2,7 @@
 title: "The Octopus: Three Hearts, Blue Blood, and Nine Brains"
 description: "Uncover the extraordinary biology of the octopus, a creature with three hearts, blue blood, and nine brains, uniquely adapted for survival in harsh marine environments."
 pubDate: 2026-06-21
-category: "Marine Biology"
+category: "Animals & Wildlife"
 tags: ["octopus", "marine life", "animal biology", "ocean facts", "cephalopods", "unique animals"]
 author: "Mystery Box"
 ---

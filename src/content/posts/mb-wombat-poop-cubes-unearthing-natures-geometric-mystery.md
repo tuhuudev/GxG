@@ -2,7 +2,7 @@
 title: "Wombat Poop Cubes: Unearthing Nature's Geometric Mystery"
 description: "Discover the fascinating science behind wombat poop cubes. Learn how these Australian marsupials create perfectly square droppings and why this unique adaptation helps them mark territory effectively."
 pubDate: 2026-06-21
-category: "Animal Science"
+category: "Animals & Wildlife"
 tags: ["wombat", "poop", "cubes", "animal science", "Australia", "digestion", "territory marking"]
 author: "Mystery Box"
 ---

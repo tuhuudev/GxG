@@ -2,7 +2,7 @@
 title: "The Pistol Shrimp: Ocean's Tiny Titan of Sound and Fury"
 description: "Discover the incredible pistol shrimp, a creature whose claw creates a super-hot, deafening shot louder than a gunshot, stunning prey with pure cavitation power."
 pubDate: 2026-06-21
-category: "Marine Biology"
+category: "Animals & Wildlife"
 tags: ["Pistol shrimp", "Snapping shrimp", "Marine life", "Ocean facts", "Cavitation", "Underwater acoustics", "Wildlife"]
 author: "Mystery Box"
 ---

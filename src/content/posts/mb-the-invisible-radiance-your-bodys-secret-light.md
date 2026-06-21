@@ -2,7 +2,7 @@
 title: "The Invisible Radiance: Your Body's Secret Light"
 description: "Discover the astonishing truth: your body emits a faint, invisible light called bioluminescence. Learn how scientists unveiled this hidden glow and why you can't see it."
 pubDate: 2026-06-21
-category: "Human Biology"
+category: "Human Body"
 tags: ["Human Body", "Bioluminescence", "Science", "Invisible Light", "Cellular Energy", "Discovery", "Physiology"]
 author: "Mystery Box"
 ---

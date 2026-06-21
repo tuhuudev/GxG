@@ -2,7 +2,7 @@
 title: "5 mẹo tăng tốc website giúp lên top Google"
 description: "Tốc độ tải trang ảnh hưởng trực tiếp đến SEO và trải nghiệm người dùng. Đây là 5 kỹ thuật tối ưu hiệu quả nhất bạn nên áp dụng ngay."
 pubDate: 2026-05-30
-category: "Công nghệ"
+category: "Technology"
 tags: ["seo", "web performance", "tối ưu"]
 author: "GxG"
 ---

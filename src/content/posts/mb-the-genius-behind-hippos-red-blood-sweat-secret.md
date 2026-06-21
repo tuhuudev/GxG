@@ -2,7 +2,7 @@
 title: "The Genius Behind Hippo's Red 'Blood Sweat' Secret"
 description: "Discover the amazing truth behind the hippo's mysterious red \"blood sweat.\" This unique fluid is a natural sunscreen, antibiotic, and moisturizer, vital for their survival."
 pubDate: 2026-06-21
-category: "Wildlife Science"
+category: "Animals & Wildlife"
 tags: ["Hippos", "Wildlife", "Animal Adaptations", "Natural Sunscreen", "Animal Secrets", "Survival", "Biology"]
 author: "Mystery Box"
 ---

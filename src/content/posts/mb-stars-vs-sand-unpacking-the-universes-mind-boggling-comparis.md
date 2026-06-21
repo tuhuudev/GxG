@@ -2,7 +2,7 @@
 title: "Stars vs. Sand: Unpacking the Universe's Mind-Boggling Comparison"
 description: "The short video 'Stars vs Sand: The Cosmic Count' reveals a stunning truth: there are more stars than sand on Earth's beaches. Discover the incredible scale of this cosmic comparison, from quintillions of sand grains to trillions of galaxies each packed with billions of stars."
 pubDate: 2026-06-21
-category: "Astronomy"
+category: "Space & Astronomy"
 tags: ["Stars", "Sand", "Universe", "Galaxies", "Cosmic Scale", "Astronomy", "Facts"]
 author: "Mystery Box"
 ---

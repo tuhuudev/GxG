@@ -2,7 +2,7 @@
 title: "The Mandela Effect: When Your Memory Plays Tricks"
 description: "Discover the Mandela Effect, where millions share vivid false memories. Learn why your brain can confidently remember things that never happened."
 pubDate: 2026-06-21
-category: "Psychology"
+category: "Psychology & Mind"
 tags: ["Mandela Effect", "False Memory", "Cognitive Bias", "Memory", "Brain Science", "Psychology", "Illusions"]
 author: "Mystery Box"
 ---

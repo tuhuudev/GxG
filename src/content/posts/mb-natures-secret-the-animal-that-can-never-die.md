@@ -2,7 +2,7 @@
 title: "Nature's Secret: The Animal That Can Never Die"
 description: "Discover the incredible story of the immortal jellyfish, a creature that defies aging by repeatedly resetting its life cycle, offering a glimpse into nature's ultimate secret to eternal youth."
 pubDate: 2026-06-21
-category: "Biology"
+category: "Science & Nature"
 tags: ["immortal jellyfish", "longevity", "animal facts", "biology", "nature's secrets", "eternal life", "unique animals"]
 author: "Mystery Box"
 ---

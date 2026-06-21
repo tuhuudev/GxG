@@ -2,7 +2,7 @@
 title: "The Eerie Mystery of Deja Vu: What Science (Still) Can't Explain"
 description: "Explore the fascinating phenomenon of deja vu, from theories of premature memory formation to brain sync issues, and why it fades as we age."
 pubDate: 2026-06-21
-category: "Neuroscience"
+category: "Psychology & Mind"
 tags: ["Deja Vu", "Brain Science", "Memory", "Cognitive Psychology", "Human Experience", "Mysteries of the Mind"]
 author: "Mystery Box"
 ---

@@ -2,7 +2,7 @@
 title: "Mưa Kim Cương: Sự Thật Đáng Kinh Ngạc Từ Vũ Trụ Xa Xôi"
 description: "Khám phá câu chuyện có thật về mưa kim cương trên Sao Hải Vương và Sao Thiên Vương. Áp lực khổng lồ biến methane thành kim cương rắn, rơi hàng ngàn dặm. Một bí mật kỳ diệu của vũ trụ."
 pubDate: 2026-06-09
-category: "Khoa học vũ trụ"
+category: "Space & Astronomy"
 tags: ["mưa kim cương", "Sao Hải Vương", "Sao Thiên Vương", "kim cương", "vũ trụ", "thiên văn học", "hành tinh"]
 author: "GxG"
 ---

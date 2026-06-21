@@ -2,7 +2,7 @@
 title: "Unveiling the Cosmic Secret: Diamond Rain on Distant Worlds"
 description: "Explore the astonishing reality of diamond rain on Neptune and Uranus, where extreme pressure transforms methane into actual, solid diamonds."
 pubDate: 2026-06-21
-category: "Space Exploration"
+category: "Space & Astronomy"
 tags: ["diamond rain", "Neptune", "Uranus", "exoplanets", "astronomy", "planetary science"]
 author: "Mystery Box"
 ---

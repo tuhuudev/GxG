@@ -2,7 +2,7 @@
 title: "Greenland Shark: An Ancient Arctic Enigma"
 description: "Discover the incredible Greenland shark, the longest-living vertebrate on Earth. Learn how these deep-sea dwellers can live over 400 years, growing slowly in the freezing Arctic depths."
 pubDate: 2026-06-21
-category: "Marine Biology"
+category: "Animals & Wildlife"
 tags: ["Greenland Shark", "Arctic", "Longevity", "Marine Life", "Deep Sea", "Sharks", "Vertebrates"]
 author: "Mystery Box"
 ---
