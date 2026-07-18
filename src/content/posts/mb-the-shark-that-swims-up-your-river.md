@@ -7,7 +7,7 @@ tags: ["Bull shark", "Sharks", "Bite force", "Predators", "Animal facts", "Wildl
 author: "GxG"
 ---
 
-<div style="position:relative;padding-top:56.25%;margin:1.5rem 0"><iframe src="https://www.youtube.com/embed/A4WX85nK8II" title="The Shark That Swims Up Your River" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+<div style="position:relative;padding-top:56.25%;margin:1.5rem 0"><iframe src="https://www.youtube.com/embed/48Xkr7SIkME" title="The Shark That Swims Up Your River" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 # The Bull Shark: A Hunter That Leaves the Ocean Behind
 
