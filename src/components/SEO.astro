@@ -1,4 +1,5 @@
 ---
+import { jsonLdString } from "../utils";
 import {
   SITE_NAME,
   SITE_URL,
@@ -204,5 +205,5 @@ const jsonLd = { "@context": "https://schema.org", "@graph": graph };
 <!-- Structured Data -->
 <script
   type="application/ld+json"
-  set:html={JSON.stringify(jsonLd)}
+  set:html={jsonLdString(jsonLd)}
 />
