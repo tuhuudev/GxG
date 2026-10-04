@@ -74,3 +74,17 @@ export function categoryGradientCss(category: string): string {
   const { from, to } = categoryGradient(category);
   return `linear-gradient(135deg, ${from} 0%, ${to} 100%)`;
 }
+
+/**
+ * JSON cho <script type="application/ld+json">: escape "<" (va & > U+2028/2029) de du lieu
+ * (tieu de bai do AI sinh, tieu de video YouTube...) chua "</script>" khong the dong the
+ * script va chen ma (XSS). Van la JSON hop le, Google doc binh thuong.
+ */
+export function jsonLdString(value: unknown): string {
+  return JSON.stringify(value)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
+}
