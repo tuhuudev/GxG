@@ -20,17 +20,25 @@ const pageTitle = isFirstPage
   ? SITE_NAME
   : `${SITE_NAME} — Page ${page.currentPage}`;
 
+const pageDescription = isFirstPage
+  ? SITE_DESCRIPTION
+  : `Page ${page.currentPage} of ${page.lastPage}: more mind-blowing facts and unsolved mysteries from ${SITE_NAME}.`;
+
 // Trang đầu: bài mới nhất làm nổi bật, còn lại vào lưới
 const featured = isFirstPage ? page.data[0] : null;
 const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
 ---
 
-<BaseLayout title={pageTitle} description={SITE_DESCRIPTION} type="website">
+<BaseLayout title={pageTitle} description={pageDescription} type="website">
   {
-    isFirstPage && (
+    isFirstPage ? (
       <section class="page-intro">
         <h1>{SITE_NAME}</h1>
         <p>{SITE_DESCRIPTION}</p>
+      </section>
+    ) : (
+      <section class="page-intro">
+        <h1>Latest posts — page {page.currentPage}</h1>
       </section>
     )
   }
