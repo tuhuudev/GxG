@@ -141,6 +141,23 @@ export function getText(response) {
     .trim();
 }
 
+// Bo heading dau bai neu no lap lai tieu de (model hay tu them "# <title>") -> trang khong bi 2 tieu de.
+// Ban sao tu soitool/scripts/lib/ai-post.mjs (xem soitool docs/content-engine.md).
+export function stripLeadingTitle(body, title) {
+  if (!body || !title) return body || "";
+  const norm = (s) =>
+    String(s).toLowerCase().replace(/[#*_`>]/g, "").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const target = norm(title);
+  const lines = String(body).split("\n");
+  let i = 0;
+  while (i < lines.length && !lines[i].trim()) i++; // bo dong trong dau
+  if (i < lines.length && /^#{1,3}\s+/.test(lines[i]) && norm(lines[i]) === target) {
+    lines.splice(i, 1);
+    while (i < lines.length && !lines[i].trim()) lines.splice(i, 1); // gon dong trong thua
+  }
+  return lines.join("\n");
+}
+
 function parseJsonObject(text) {
   const cleaned = String(text || "")
     .replace(/^```(?:json)?/i, "")
@@ -320,7 +337,9 @@ export async function generatePost(opts, apiKey, { attempts = 2 } = {}) {
       lastErr = new Error("Gemini returned no text.");
     } else {
       try {
-        return { post: parseJsonObject(text), research };
+        const post = parseJsonObject(text);
+        post.body = stripLeadingTitle(post.body, post.title);
+        return { post, research };
       } catch (e) {
         lastErr = new Error(
           finish === "MAX_TOKENS"
