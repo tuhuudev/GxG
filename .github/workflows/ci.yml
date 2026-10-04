@@ -1,0 +1,23 @@
+# Kiem tra build tren moi PR / push main. Cloudflare Pages van tu deploy nhu cu;
+# workflow nay chi chan PR lam hong build (sai frontmatter, link anh hong, loi Astro...).
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
