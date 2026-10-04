@@ -10,7 +10,7 @@ export const SITE_NAME = "Mystery Box";
 
 /** Mô tả mặc định của trang (dùng khi bài viết không có description) */
 export const SITE_DESCRIPTION =
-  "Mind-blowing facts and unsolved mysteries — about space, the human body, history, animals, psychology, and the universe — told with a dark, cinematic twist in under a minute.";
+  "Mind-blowing facts and unsolved mysteries about space, the human body, history, animals and psychology, told with a dark, cinematic twist in under a minute.";
 
 /** Ngôn ngữ trang */
 export const SITE_LANG = "en";
