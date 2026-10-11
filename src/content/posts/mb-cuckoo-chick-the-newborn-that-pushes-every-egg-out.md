@@ -7,7 +7,7 @@ tags: ["cuckoo", "brood parasite", "reed warbler", "birds", "animals"]
 author: "GxG"
 ---
 
-<div style="position:relative;padding-top:56.25%;margin:1.5rem 0"><iframe src="https://www.youtube.com/embed/ZbOq5rj_qBo" title="Cuckoo Chick: The Newborn That Pushes Every Egg Out" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+<div style="position:relative;padding-top:56.25%;margin:1.5rem 0"><iframe src="https://www.youtube.com/embed/QK5onasKoYw" title="Cuckoo Chick: The Newborn That Pushes Every Egg Out" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 The common cuckoo never raises its own young. It hands that job to other birds, such as the reed warbler. And the cuckoo chick makes sure it is the only one they raise.
 

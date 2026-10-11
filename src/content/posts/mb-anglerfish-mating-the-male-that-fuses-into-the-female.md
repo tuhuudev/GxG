@@ -7,7 +7,7 @@ tags: ["anglerfish", "deep sea", "sexual parasitism", "ocean", "fish", "animals"
 author: "GxG"
 ---
 
-<div style="position:relative;padding-top:56.25%;margin:1.5rem 0"><iframe src="https://www.youtube.com/embed/jKqaMa_S1E8" title="Anglerfish Mating: The Male That Fuses Into the Female" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+<div style="position:relative;padding-top:56.25%;margin:1.5rem 0"><iframe src="https://www.youtube.com/embed/3xM_bXYyhhk" title="Anglerfish Mating: The Male That Fuses Into the Female" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 In the pitch-black midnight zone of the ocean, finding a partner is hard. Some deep-sea anglerfish solve that problem in one of the strangest ways in nature: the male bites the female and becomes part of her body.
 

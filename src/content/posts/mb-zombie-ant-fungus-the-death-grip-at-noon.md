@@ -7,7 +7,7 @@ tags: ["zombie ant", "ophiocordyceps", "cordyceps", "fungus", "parasite", "insec
 author: "GxG"
 ---
 
-<div style="position:relative;padding-top:56.25%;margin:1.5rem 0"><iframe src="https://www.youtube.com/embed/x40lkO9_NdI" title="Zombie Ant Fungus: The Death Grip at Noon" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+<div style="position:relative;padding-top:56.25%;margin:1.5rem 0"><iframe src="https://www.youtube.com/embed/CqNkLYSui7U" title="Zombie Ant Fungus: The Death Grip at Noon" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
 
 In the rainforests of Thailand, a fungus called *Ophiocordyceps unilateralis* infects carpenter ants. It grows through the ant's body from the inside, and while it does, it keeps the ant walking — to one very particular place.
 
